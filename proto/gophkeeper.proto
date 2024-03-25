@@ -1,0 +1,66 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package gophkeeper;
+option go_package = "gophkeeper_server/proto";
+
+message UserAuthRequest {
+    string login = 1;
+    string password = 2; 
+    string email = 3;
+}
+
+message UserLoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message UserdataGetResponse {
+    repeated TextdataEntry Data = 1;
+}
+
+message CallbackStatusResponse {
+    string status = 1;
+}
+
+message TextdataEntry {
+    int64 ID = 1;
+    string text = 2;
+    string metainfo = 3;
+}
+
+message TextdataEntriesResponse {
+    repeated TextdataEntry Data = 1;
+}
+
+message TextDataStoreRequest {
+    string text = 1;
+    string metainfo = 2;
+}
+
+message TextDataUpdateRequest {
+    int64 ID = 1;
+    string text = 2;
+    string metainfo = 3;
+}
+
+message CredsdataEntry {
+    int64 ID = 1;
+    string username = 2;
+    string password = 3;
+    string metainfo = 4;;
+}
+
+message CredsdataStoreRequest {
+    string username = 1;
+    string password = 2;
+}
+
+service Gophkeeper {
+    rpc UserAuth(UserAuthRequest) returns (google.protobuf.Empty) {};
+    rpc UserLogin(UserLoginRequest) returns (google.protobuf.Empty) {};
+    rpc UserdataGet(google.protobuf.Empty) returns (UserdataGetResponse) {};
+    rpc TextdataCreate(TextDataStoreRequest) returns (CallbackStatusResponse) {};
+    rpc TextdataUpdate(TextDataUpdateRequest) returns (CallbackStatusResponse) {};
+    rpc TextdataGet(google.protobuf.Empty) returns (TextdataEntriesResponse) {};
+    rpc CredsdataCreate(CredsdataStoreRequest) returns (CallbackStatusResponse) {};
+}
