@@ -28,6 +28,7 @@ const (
 	Gophkeeper_TextdataGet_FullMethodName     = "/gophkeeper.Gophkeeper/TextdataGet"
 	Gophkeeper_CredsdataCreate_FullMethodName = "/gophkeeper.Gophkeeper/CredsdataCreate"
 	Gophkeeper_CredsdataGet_FullMethodName    = "/gophkeeper.Gophkeeper/CredsdataGet"
+	Gophkeeper_CredsdataUpdate_FullMethodName = "/gophkeeper.Gophkeeper/CredsdataUpdate"
 )
 
 // GophkeeperClient is the client API for Gophkeeper service.
@@ -42,6 +43,7 @@ type GophkeeperClient interface {
 	TextdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TextdataEntriesResponse, error)
 	CredsdataCreate(ctx context.Context, in *CredsdataStoreRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 	CredsdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CredsdataEntriesResponse, error)
+	CredsdataUpdate(ctx context.Context, in *CredsdataUpdateRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 }
 
 type gophkeeperClient struct {
@@ -124,6 +126,15 @@ func (c *gophkeeperClient) CredsdataGet(ctx context.Context, in *emptypb.Empty, 
 	return out, nil
 }
 
+func (c *gophkeeperClient) CredsdataUpdate(ctx context.Context, in *CredsdataUpdateRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error) {
+	out := new(CallbackStatusResponse)
+	err := c.cc.Invoke(ctx, Gophkeeper_CredsdataUpdate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GophkeeperServer is the server API for Gophkeeper service.
 // All implementations must embed UnimplementedGophkeeperServer
 // for forward compatibility
@@ -136,6 +147,7 @@ type GophkeeperServer interface {
 	TextdataGet(context.Context, *emptypb.Empty) (*TextdataEntriesResponse, error)
 	CredsdataCreate(context.Context, *CredsdataStoreRequest) (*CallbackStatusResponse, error)
 	CredsdataGet(context.Context, *emptypb.Empty) (*CredsdataEntriesResponse, error)
+	CredsdataUpdate(context.Context, *CredsdataUpdateRequest) (*CallbackStatusResponse, error)
 	mustEmbedUnimplementedGophkeeperServer()
 }
 
@@ -166,6 +178,9 @@ func (UnimplementedGophkeeperServer) CredsdataCreate(context.Context, *Credsdata
 }
 func (UnimplementedGophkeeperServer) CredsdataGet(context.Context, *emptypb.Empty) (*CredsdataEntriesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CredsdataGet not implemented")
+}
+func (UnimplementedGophkeeperServer) CredsdataUpdate(context.Context, *CredsdataUpdateRequest) (*CallbackStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CredsdataUpdate not implemented")
 }
 func (UnimplementedGophkeeperServer) mustEmbedUnimplementedGophkeeperServer() {}
 
@@ -324,6 +339,24 @@ func _Gophkeeper_CredsdataGet_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Gophkeeper_CredsdataUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CredsdataUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GophkeeperServer).CredsdataUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Gophkeeper_CredsdataUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GophkeeperServer).CredsdataUpdate(ctx, req.(*CredsdataUpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Gophkeeper_ServiceDesc is the grpc.ServiceDesc for Gophkeeper service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -362,6 +395,10 @@ var Gophkeeper_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CredsdataGet",
 			Handler:    _Gophkeeper_CredsdataGet_Handler,
+		},
+		{
+			MethodName: "CredsdataUpdate",
+			Handler:    _Gophkeeper_CredsdataUpdate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
