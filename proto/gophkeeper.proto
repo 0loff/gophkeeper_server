@@ -47,7 +47,11 @@ message CredsdataEntry {
     int64 ID = 1;
     string username = 2;
     string password = 3;
-    string metainfo = 4;;
+    string metaifno = 4;
+}
+
+message CredsdataEntriesResponse {
+    repeated CredsdataEntry Data = 1;
 }
 
 message CredsdataStoreRequest {
@@ -64,4 +68,5 @@ service Gophkeeper {
     rpc TextdataUpdate(TextDataUpdateRequest) returns (CallbackStatusResponse) {};
     rpc TextdataGet(google.protobuf.Empty) returns (TextdataEntriesResponse) {};
     rpc CredsdataCreate(CredsdataStoreRequest) returns (CallbackStatusResponse) {};
+    rpc CredsdataGet(google.protobuf.Empty) returns (CredsdataEntriesResponse) {};
 }

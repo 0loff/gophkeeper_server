@@ -46,3 +46,12 @@ func (d *DataUseCases) UpdTextdata(ctx context.Context, id int, title, text stri
 
 	return nil
 }
+
+func (d *DataUseCases) StoreCredsdata(ctx context.Context, uid int, username, password, metainfo string) error {
+	if err := d.ac.CreateCredsdata(ctx, uid, username, password, metainfo); err != nil {
+		logger.Log.Error("Cannot processed credentials creation", zap.Error(err))
+		return err
+	}
+
+	return nil
+}

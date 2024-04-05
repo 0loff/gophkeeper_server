@@ -127,3 +127,17 @@ func (r *DataRepository) UpdateTextdata(ctx context.Context, id int, text, metai
 
 	return nil
 }
+
+func (r *DataRepository) CreateCredsdata(ctx context.Context, user_id int, username, password, metainfo string) error {
+	now := time.Now()
+
+	_, err := r.dbpool.Exec(ctx, `INSERT INTO credsdata(user_id, username, password, metainfo, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`,
+		user_id, username, password, metainfo, now.Format(time.RFC3339), now.Format(time.RFC3339))
+	if err != nil {
+
+		logger.Log.Error("Failed to create new credentials", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
