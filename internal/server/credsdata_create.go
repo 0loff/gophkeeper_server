@@ -23,8 +23,7 @@ func (s *Server) CredsdataCreate(ctx context.Context, in *pb.CredsdataStoreReque
 		return &pb.CallbackStatusResponse{Status: statusFail}, status.Errorf(codes.Internal, "Internal server error")
 	}
 
-	err = s.DP.StoreCredsdata(ctx, user_id, in.Username, in.Password, in.Metainfo)
-	if err != nil {
+	if err = s.DP.StoreCredsdata(ctx, user_id, in.Username, in.Password, in.Metainfo); err != nil {
 		return &pb.CallbackStatusResponse{Status: statusFail}, status.Errorf(codes.Internal, "Internal server error")
 	}
 

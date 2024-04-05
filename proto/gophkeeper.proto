@@ -60,6 +60,13 @@ message CredsdataStoreRequest {
     string metainfo = 3;
 }
 
+message CredsdataUpdateRequest {
+    int64 ID = 1;
+    string username = 2;
+    string password = 3;
+    string metainfo = 4;
+}
+
 service Gophkeeper {
     rpc UserAuth(UserAuthRequest) returns (google.protobuf.Empty) {};
     rpc UserLogin(UserLoginRequest) returns (google.protobuf.Empty) {};
@@ -69,4 +76,5 @@ service Gophkeeper {
     rpc TextdataGet(google.protobuf.Empty) returns (TextdataEntriesResponse) {};
     rpc CredsdataCreate(CredsdataStoreRequest) returns (CallbackStatusResponse) {};
     rpc CredsdataGet(google.protobuf.Empty) returns (CredsdataEntriesResponse) {};
+    rpc CredsdataUpdate(CredsdataUpdateRequest) returns (CallbackStatusResponse) {};
 }

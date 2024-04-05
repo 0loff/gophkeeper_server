@@ -55,3 +55,21 @@ func (d *DataUseCases) StoreCredsdata(ctx context.Context, uid int, username, pa
 
 	return nil
 }
+
+func (d *DataUseCases) ReceiveCredsdata(ctx context.Context, uid int) []models.CredsdataEntry {
+	credsData, err := d.ac.GetCredsdata(ctx, uid)
+	if err != nil {
+		logger.Log.Error("Cannot receive user credentials data", zap.Error(err))
+		return nil
+	}
+	return credsData
+}
+
+func (d *DataUseCases) UpdCredsdata(ctx context.Context, id int, username, password, metainfo string) error {
+	if err := d.ac.UpdateCredsdata(ctx, id, username, password, metainfo); err != nil {
+		logger.Log.Error("Cannot processed credsdata updating", zap.Error(err))
+		return err
+	}
+
+	return nil
+}

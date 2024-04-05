@@ -12,4 +12,6 @@ type DataProcessor interface {
 	UpdTextdata(ctx context.Context, id int, title, text string) error
 
 	StoreCredsdata(ctx context.Context, uid int, username, password, metainfo string) error
+	ReceiveCredsdata(ctx context.Context, uid int) []models.CredsdataEntry
+	UpdCredsdata(ctx context.Context, uid int, username, password, metainfo string) error
 }

@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -69,15 +68,12 @@ func (r *DataRepository) CreateCredsdataTable() {
 func (r *DataRepository) GetTextdata(ctx context.Context, user_id int) ([]models.TextdataEntry, error) {
 	var TextdataEntries []models.TextdataEntry
 
-	fmt.Print("hsgvcdsv")
-
 	rows, err := r.dbpool.Query(ctx, `SELECT id, text, metainfo FROM textdata WHERE user_id = $1`, user_id)
 	if err != nil {
 		logger.Log.Error("Unrecognized data from the database \n", zap.Error(err))
 		return nil, err
 	}
 	defer rows.Close()
-	fmt.Println(rows)
 
 	for rows.Next() {
 		var Textdata models.TextdataEntry
@@ -136,6 +132,51 @@ func (r *DataRepository) CreateCredsdata(ctx context.Context, user_id int, usern
 	if err != nil {
 
 		logger.Log.Error("Failed to create new credentials", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (r *DataRepository) GetCredsdata(ctx context.Context, user_id int) ([]models.CredsdataEntry, error) {
+	var CredsdataEntries []models.CredsdataEntry
+
+	rows, err := r.dbpool.Query(ctx, `SELECT id, username, password, metainfo FROM credsdata WHERE user_id = $1`, user_id)
+	if err != nil {
+		logger.Log.Error("Unrecognized data from the database \n", zap.Error(err))
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var Credsdata models.CredsdataEntry
+		if err := rows.Scan(&Credsdata.ID, &Credsdata.Username, &Credsdata.Password, &Credsdata.Metainfo); err != nil {
+			logger.Log.Error("Unable to parse the received value", zap.Error(err))
+			continue
+		}
+
+		CredsdataEntries = append(CredsdataEntries, Credsdata)
+	}
+
+	if err = rows.Err(); err != nil {
+		logger.Log.Error("Unexpected error from parse data in rows next loop", zap.Error(err))
+		return nil, err
+	}
+
+	return CredsdataEntries, nil
+}
+
+func (r *DataRepository) UpdateCredsdata(ctx context.Context, id int, username, password, metainfo string) error {
+	now := time.Now()
+
+	if _, err := r.dbpool.Exec(
+		ctx,
+		`UPDATE credsdata
+		SET username = $1, password = $2, metainfo = $3, updated_at = $4
+		WHERE id = $5`,
+		username, password, metainfo, now, id,
+	); err != nil {
+		logger.Log.Error("Failed to update textdata", zap.Error(err))
 		return err
 	}
 
