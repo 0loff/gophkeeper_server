@@ -22,6 +22,7 @@ func NewDataRepository(db *pgxpool.Pool) *DataRepository {
 
 	dr.CreateTextdataTable()
 	dr.CreateCredsdataTable()
+	dr.CreateCardsdataTable()
 
 	return dr
 }
@@ -61,6 +62,27 @@ func (r *DataRepository) CreateCredsdataTable() {
 		);`)
 	if err != nil {
 		logger.Log.Error("Unable to create CREDSDATA table", zap.Error(err))
+		log.Fatal(err)
+	}
+}
+
+func (r *DataRepository) CreateCardsdataTable() {
+	_, err := r.dbpool.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS cardsdata (
+		id serial PRIMARY KEY,
+		user_id BIGINT NOT NULL,
+		pan TEXT NOT NULL,
+		expiry TEXT NOT NULL,
+		holder TEXT NOT NULL,
+		metainfo TEXT NOT NULL,
+		created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+		updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+		CONSTRAINT fk_users
+			FOREIGN KEY(user_id)
+				REFERENCES users(id)
+				ON DELETE CASCADE
+		);`)
+	if err != nil {
+		logger.Log.Error("Unable to create CARDSDATA table", zap.Error(err))
 		log.Fatal(err)
 	}
 }
@@ -176,7 +198,65 @@ func (r *DataRepository) UpdateCredsdata(ctx context.Context, id int, username, 
 		WHERE id = $5`,
 		username, password, metainfo, now, id,
 	); err != nil {
-		logger.Log.Error("Failed to update textdata", zap.Error(err))
+		logger.Log.Error("Failed to update crdesdata table entry", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (r *DataRepository) CreateCardsdata(ctx context.Context, user_id int, pan, expiry, holder, metainfo string) error {
+	now := time.Now()
+
+	_, err := r.dbpool.Exec(ctx, `INSERT INTO cardsdata(user_id, pan, expiry, holder, metainfo, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		user_id, pan, expiry, holder, metainfo, now.Format(time.RFC3339), now.Format(time.RFC3339))
+	if err != nil {
+
+		logger.Log.Error("Failed to create new card data", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+func (r *DataRepository) GetCardsdata(ctx context.Context, user_id int) ([]models.CardsdataEntry, error) {
+	var CardsdataEntries []models.CardsdataEntry
+
+	rows, err := r.dbpool.Query(ctx, `SELECT id, pan, expiry, holder, metainfo FROM cardsdata WHERE user_id = $1`, user_id)
+	if err != nil {
+		logger.Log.Error("Unrecognized data from the database \n", zap.Error(err))
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var Cardsdata models.CardsdataEntry
+		if err := rows.Scan(&Cardsdata.ID, &Cardsdata.Pan, &Cardsdata.Expiry, &Cardsdata.Holder, &Cardsdata.Metainfo); err != nil {
+			logger.Log.Error("Unable to parse the received value", zap.Error(err))
+			continue
+		}
+
+		CardsdataEntries = append(CardsdataEntries, Cardsdata)
+	}
+
+	if err = rows.Err(); err != nil {
+		logger.Log.Error("Unexpected error from parse data in rows next loop", zap.Error(err))
+		return nil, err
+	}
+
+	return CardsdataEntries, nil
+}
+
+func (r *DataRepository) UpdateCardsdata(ctx context.Context, id int, pan, expiry, holder, metainfo string) error {
+	now := time.Now()
+
+	if _, err := r.dbpool.Exec(
+		ctx,
+		`UPDATE cardsdata
+		SET pan = $1, expiry = $2, holder = $3, metainfo = $4, updated_at = $5
+		WHERE id = $6`,
+		pan, expiry, holder, metainfo, now, id,
+	); err != nil {
+		logger.Log.Error("Failed to update cardsdata table entry", zap.Error(err))
 		return err
 	}
 

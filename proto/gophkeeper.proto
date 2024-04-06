@@ -67,14 +67,48 @@ message CredsdataUpdateRequest {
     string metainfo = 4;
 }
 
+message CardsdataEntry {
+    int64 ID = 1;
+    string pan = 2;
+    string expiry = 3;
+    string holder = 4;
+    string metainfo = 5;
+}
+
+message CardsdataEntriesResponse {
+    repeated CardsdataEntry Data = 1;
+}
+
+message CardsdataStoreRequest {
+    string pan = 1;
+    string expity = 2;
+    string holder = 3;
+    string metainfo = 4;
+}
+
+message CardsdataUpdateRequest {
+    int64 ID = 1;
+    string pan = 2;
+    string expiry = 3;
+    string holder = 4;
+    string metainfo = 5;
+}
+
 service Gophkeeper {
     rpc UserAuth(UserAuthRequest) returns (google.protobuf.Empty) {};
     rpc UserLogin(UserLoginRequest) returns (google.protobuf.Empty) {};
+
     rpc UserdataGet(google.protobuf.Empty) returns (UserdataGetResponse) {};
+    
     rpc TextdataCreate(TextDataStoreRequest) returns (CallbackStatusResponse) {};
     rpc TextdataUpdate(TextDataUpdateRequest) returns (CallbackStatusResponse) {};
     rpc TextdataGet(google.protobuf.Empty) returns (TextdataEntriesResponse) {};
+
     rpc CredsdataCreate(CredsdataStoreRequest) returns (CallbackStatusResponse) {};
     rpc CredsdataGet(google.protobuf.Empty) returns (CredsdataEntriesResponse) {};
     rpc CredsdataUpdate(CredsdataUpdateRequest) returns (CallbackStatusResponse) {};
+    
+    rpc CardsdataCreate(CardsdataStoreRequest) returns (CallbackStatusResponse) {};
+    rpc CardsdataGet(google.protobuf.Empty) returns (CardsdataEntriesResponse) {};
+    rpc CardsdataUpdate(CardsdataUpdateRequest) returns (CallbackStatusResponse) {};
 }

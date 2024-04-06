@@ -14,4 +14,8 @@ type DataProcessor interface {
 	StoreCredsdata(ctx context.Context, uid int, username, password, metainfo string) error
 	ReceiveCredsdata(ctx context.Context, uid int) []models.CredsdataEntry
 	UpdCredsdata(ctx context.Context, uid int, username, password, metainfo string) error
+
+	StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error
+	ReceiveCardsdata(ctx context.Context, uid int) []models.CardsdataEntry
+	UpdCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error
 }

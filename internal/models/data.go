@@ -16,3 +16,11 @@ type CredsdataEntry struct {
 	Password string
 	Metainfo string
 }
+
+type CardsdataEntry struct {
+	ID       int
+	Pan      string
+	Expiry   string
+	Holder   string
+	Metainfo string
+}

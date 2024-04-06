@@ -14,4 +14,8 @@ type DataManager interface {
 	CreateCredsdata(ctx context.Context, user_id int, username, password, metainfo string) error
 	GetCredsdata(ctx context.Context, user_id int) ([]models.CredsdataEntry, error)
 	UpdateCredsdata(ctx context.Context, user_id int, username, password, metainfo string) error
+
+	CreateCardsdata(ctx context.Context, user_id int, pan, expiry, holder, metainfo string) error
+	GetCardsdata(ctx context.Context, user_id int) ([]models.CardsdataEntry, error)
+	UpdateCardsdata(ctx context.Context, user_id int, pan, expiry, holder, metainfo string) error
 }
