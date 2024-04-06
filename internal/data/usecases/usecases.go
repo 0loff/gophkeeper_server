@@ -100,3 +100,30 @@ func (d *DataUseCases) UpdCardsdata(ctx context.Context, id int, pan, expiry, ho
 
 	return nil
 }
+
+func (d *DataUseCases) StoreBindata(ctx context.Context, uid int, binary []byte, metainfo string) error {
+	if err := d.ac.CreateBindata(ctx, uid, binary, metainfo); err != nil {
+		logger.Log.Error("Cannot processed binary data creation", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) ReceiveBindata(ctx context.Context, uid int) []models.BindataEntry {
+	binData, err := d.ac.GetBindata(ctx, uid)
+	if err != nil {
+		logger.Log.Error("Cannot receive user binary data", zap.Error(err))
+		return nil
+	}
+	return binData
+}
+
+func (d *DataUseCases) UpdBindata(ctx context.Context, id int, binary []byte, metainfo string) error {
+	if err := d.ac.UpdateBindata(ctx, id, binary, metainfo); err != nil {
+		logger.Log.Error("Cannot processed bindata updating", zap.Error(err))
+		return err
+	}
+
+	return nil
+}

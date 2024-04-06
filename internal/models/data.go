@@ -24,3 +24,9 @@ type CardsdataEntry struct {
 	Holder   string
 	Metainfo string
 }
+
+type BindataEntry struct {
+	ID       int
+	Binary   []byte
+	Metainfo string
+}

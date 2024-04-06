@@ -18,4 +18,8 @@ type DataManager interface {
 	CreateCardsdata(ctx context.Context, user_id int, pan, expiry, holder, metainfo string) error
 	GetCardsdata(ctx context.Context, user_id int) ([]models.CardsdataEntry, error)
 	UpdateCardsdata(ctx context.Context, user_id int, pan, expiry, holder, metainfo string) error
+
+	CreateBindata(ctx context.Context, user_id int, binary []byte, metainfo string) error
+	GetBindata(ctx context.Context, user_id int) ([]models.BindataEntry, error)
+	UpdateBindata(ctx context.Context, user_id int, binary []byte, metainfo string) error
 }

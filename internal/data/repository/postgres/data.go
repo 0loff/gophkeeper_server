@@ -23,6 +23,7 @@ func NewDataRepository(db *pgxpool.Pool) *DataRepository {
 	dr.CreateTextdataTable()
 	dr.CreateCredsdataTable()
 	dr.CreateCardsdataTable()
+	dr.CreateBindataTable()
 
 	return dr
 }
@@ -83,6 +84,25 @@ func (r *DataRepository) CreateCardsdataTable() {
 		);`)
 	if err != nil {
 		logger.Log.Error("Unable to create CARDSDATA table", zap.Error(err))
+		log.Fatal(err)
+	}
+}
+
+func (r *DataRepository) CreateBindataTable() {
+	_, err := r.dbpool.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS bindata (
+		id serial PRIMARY KEY,
+		user_id BIGINT NOT NULL,
+		bin BYTEA NOT NULL,
+		metainfo TEXT NOT NULL,
+		created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+		updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+		CONSTRAINT fk_users
+			FOREIGN KEY(user_id)
+				REFERENCES users(id)
+				ON DELETE CASCADE
+		);`)
+	if err != nil {
+		logger.Log.Error("Unable to create BINDATA table", zap.Error(err))
 		log.Fatal(err)
 	}
 }
@@ -218,6 +238,7 @@ func (r *DataRepository) CreateCardsdata(ctx context.Context, user_id int, pan, 
 
 	return nil
 }
+
 func (r *DataRepository) GetCardsdata(ctx context.Context, user_id int) ([]models.CardsdataEntry, error) {
 	var CardsdataEntries []models.CardsdataEntry
 
@@ -257,6 +278,65 @@ func (r *DataRepository) UpdateCardsdata(ctx context.Context, id int, pan, expir
 		pan, expiry, holder, metainfo, now, id,
 	); err != nil {
 		logger.Log.Error("Failed to update cardsdata table entry", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (r *DataRepository) CreateBindata(ctx context.Context, user_id int, binary []byte, metainfo string) error {
+	now := time.Now()
+
+	_, err := r.dbpool.Exec(ctx, `INSERT INTO bindata(user_id, bin, metainfo, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)`,
+		user_id, binary, metainfo, now.Format(time.RFC3339), now.Format(time.RFC3339))
+	if err != nil {
+
+		logger.Log.Error("Failed to create new binary data entry", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (r *DataRepository) GetBindata(ctx context.Context, user_id int) ([]models.BindataEntry, error) {
+	var BindataEntries []models.BindataEntry
+
+	rows, err := r.dbpool.Query(ctx, `SELECT id, bin, metainfo FROM bindata WHERE user_id = $1`, user_id)
+	if err != nil {
+		logger.Log.Error("Unrecognized data from the database \n", zap.Error(err))
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var Bindata models.BindataEntry
+		if err := rows.Scan(&Bindata.ID, &Bindata.Binary, &Bindata.Metainfo); err != nil {
+			logger.Log.Error("Unable to parse the received value", zap.Error(err))
+			continue
+		}
+
+		BindataEntries = append(BindataEntries, Bindata)
+	}
+
+	if err = rows.Err(); err != nil {
+		logger.Log.Error("Unexpected error from parse data in rows next loop", zap.Error(err))
+		return nil, err
+	}
+
+	return BindataEntries, nil
+}
+
+func (r *DataRepository) UpdateBindata(ctx context.Context, id int, binary []byte, metainfo string) error {
+	now := time.Now()
+
+	if _, err := r.dbpool.Exec(
+		ctx,
+		`UPDATE bindata
+		SET bin = $1, metainfo = $2, updated_at = $3
+		WHERE id = $4`,
+		binary, metainfo, now, id,
+	); err != nil {
+		logger.Log.Error("Failed to update bindata table entry", zap.Error(err))
 		return err
 	}
 

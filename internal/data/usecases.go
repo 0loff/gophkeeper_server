@@ -18,4 +18,8 @@ type DataProcessor interface {
 	StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error
 	ReceiveCardsdata(ctx context.Context, uid int) []models.CardsdataEntry
 	UpdCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error
+
+	StoreBindata(ctx context.Context, uid int, binary []byte, metainfo string) error
+	ReceiveBindata(ctx context.Context, uid int) []models.BindataEntry
+	UpdBindata(ctx context.Context, uid int, binary []byte, metainfo string) error
 }

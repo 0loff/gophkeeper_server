@@ -32,6 +32,9 @@ const (
 	Gophkeeper_CardsdataCreate_FullMethodName = "/gophkeeper.Gophkeeper/CardsdataCreate"
 	Gophkeeper_CardsdataGet_FullMethodName    = "/gophkeeper.Gophkeeper/CardsdataGet"
 	Gophkeeper_CardsdataUpdate_FullMethodName = "/gophkeeper.Gophkeeper/CardsdataUpdate"
+	Gophkeeper_BindataCreate_FullMethodName   = "/gophkeeper.Gophkeeper/BindataCreate"
+	Gophkeeper_BindataGet_FullMethodName      = "/gophkeeper.Gophkeeper/BindataGet"
+	Gophkeeper_BindataUpdate_FullMethodName   = "/gophkeeper.Gophkeeper/BindataUpdate"
 )
 
 // GophkeeperClient is the client API for Gophkeeper service.
@@ -50,6 +53,9 @@ type GophkeeperClient interface {
 	CardsdataCreate(ctx context.Context, in *CardsdataStoreRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 	CardsdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CardsdataEntriesResponse, error)
 	CardsdataUpdate(ctx context.Context, in *CardsdataUpdateRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
+	BindataCreate(ctx context.Context, in *BindataStoreRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
+	BindataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*BindataEntriesResponse, error)
+	BindataUpdate(ctx context.Context, in *BindataUpdateRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 }
 
 type gophkeeperClient struct {
@@ -168,6 +174,33 @@ func (c *gophkeeperClient) CardsdataUpdate(ctx context.Context, in *CardsdataUpd
 	return out, nil
 }
 
+func (c *gophkeeperClient) BindataCreate(ctx context.Context, in *BindataStoreRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error) {
+	out := new(CallbackStatusResponse)
+	err := c.cc.Invoke(ctx, Gophkeeper_BindataCreate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gophkeeperClient) BindataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*BindataEntriesResponse, error) {
+	out := new(BindataEntriesResponse)
+	err := c.cc.Invoke(ctx, Gophkeeper_BindataGet_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gophkeeperClient) BindataUpdate(ctx context.Context, in *BindataUpdateRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error) {
+	out := new(CallbackStatusResponse)
+	err := c.cc.Invoke(ctx, Gophkeeper_BindataUpdate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GophkeeperServer is the server API for Gophkeeper service.
 // All implementations must embed UnimplementedGophkeeperServer
 // for forward compatibility
@@ -184,6 +217,9 @@ type GophkeeperServer interface {
 	CardsdataCreate(context.Context, *CardsdataStoreRequest) (*CallbackStatusResponse, error)
 	CardsdataGet(context.Context, *emptypb.Empty) (*CardsdataEntriesResponse, error)
 	CardsdataUpdate(context.Context, *CardsdataUpdateRequest) (*CallbackStatusResponse, error)
+	BindataCreate(context.Context, *BindataStoreRequest) (*CallbackStatusResponse, error)
+	BindataGet(context.Context, *emptypb.Empty) (*BindataEntriesResponse, error)
+	BindataUpdate(context.Context, *BindataUpdateRequest) (*CallbackStatusResponse, error)
 	mustEmbedUnimplementedGophkeeperServer()
 }
 
@@ -226,6 +262,15 @@ func (UnimplementedGophkeeperServer) CardsdataGet(context.Context, *emptypb.Empt
 }
 func (UnimplementedGophkeeperServer) CardsdataUpdate(context.Context, *CardsdataUpdateRequest) (*CallbackStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CardsdataUpdate not implemented")
+}
+func (UnimplementedGophkeeperServer) BindataCreate(context.Context, *BindataStoreRequest) (*CallbackStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BindataCreate not implemented")
+}
+func (UnimplementedGophkeeperServer) BindataGet(context.Context, *emptypb.Empty) (*BindataEntriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BindataGet not implemented")
+}
+func (UnimplementedGophkeeperServer) BindataUpdate(context.Context, *BindataUpdateRequest) (*CallbackStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BindataUpdate not implemented")
 }
 func (UnimplementedGophkeeperServer) mustEmbedUnimplementedGophkeeperServer() {}
 
@@ -456,6 +501,60 @@ func _Gophkeeper_CardsdataUpdate_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Gophkeeper_BindataCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BindataStoreRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GophkeeperServer).BindataCreate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Gophkeeper_BindataCreate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GophkeeperServer).BindataCreate(ctx, req.(*BindataStoreRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gophkeeper_BindataGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GophkeeperServer).BindataGet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Gophkeeper_BindataGet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GophkeeperServer).BindataGet(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gophkeeper_BindataUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BindataUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GophkeeperServer).BindataUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Gophkeeper_BindataUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GophkeeperServer).BindataUpdate(ctx, req.(*BindataUpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Gophkeeper_ServiceDesc is the grpc.ServiceDesc for Gophkeeper service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -510,6 +609,18 @@ var Gophkeeper_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CardsdataUpdate",
 			Handler:    _Gophkeeper_CardsdataUpdate_Handler,
+		},
+		{
+			MethodName: "BindataCreate",
+			Handler:    _Gophkeeper_BindataCreate_Handler,
+		},
+		{
+			MethodName: "BindataGet",
+			Handler:    _Gophkeeper_BindataGet_Handler,
+		},
+		{
+			MethodName: "BindataUpdate",
+			Handler:    _Gophkeeper_BindataUpdate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
