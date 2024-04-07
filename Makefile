@@ -12,7 +12,7 @@ build:
 start:
 	@echo "Run app"; \
 	cd ${SERVER_PATH}; \
-	./server
+	./server -d=${DATABASE_DSN}
 	
 update_grpc:
 	@echo "Update grpc"; \
@@ -23,7 +23,5 @@ update_grpc:
 run_client:
 	@echo "Build client"; \
 	cd ${CLIENT_PATH}; \
-	go build
-	@echo "Run client"; \
-	cd ${CLIENT_PATH}; \
+	go build -ldflags "-X main.buildVersion=v1.0.1 -X 'main.buildDate=$(date +'%Y/%m/%d')' -X 'main.buildCommit=$(git rev-parse HEAD~1)'"; \
 	./client

@@ -15,14 +15,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// type User struct {
-// 	ID       int    `db:"_id, omitempty"`
-// 	UUID     uint32 `db:"_uuid, omitempty"`
-// 	Username string `db:"username"`
-// 	Password string `db:"password"`
-// 	Email    string `db:"email"`
-// }
-
 type UserRepository struct {
 	dbpool *pgxpool.Pool
 }

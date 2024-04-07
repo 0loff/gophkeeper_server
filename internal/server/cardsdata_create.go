@@ -23,7 +23,7 @@ func (s *Server) CardsdataCreate(ctx context.Context, in *pb.CardsdataStoreReque
 		return &pb.CallbackStatusResponse{Status: statusFail}, status.Errorf(codes.Internal, "Internal server error")
 	}
 
-	if err = s.DP.StoreCardsdata(ctx, user_id, in.Pan, in.Expity, in.Holder, in.Metainfo); err != nil {
+	if err = s.DP.StoreCardsdata(ctx, user_id, in.Pan, in.Expiry, in.Holder, in.Metainfo); err != nil {
 		return &pb.CallbackStatusResponse{Status: statusFail}, status.Errorf(codes.Internal, "Internal server error")
 	}
 

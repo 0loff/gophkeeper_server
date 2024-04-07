@@ -70,23 +70,3 @@ func (u *UserUseCases) GetUserID(ctx context.Context, uuid string) (int, error) 
 	return id, nil
 
 }
-
-// func (u *UserUseCases) Login(ctx context.Context, username, password string) (string, error) {
-// 	hash, err := encryptor.Encrypt(password)
-// 	if err != nil {
-// 		logger.Log.Error("Failed to create hash from password", zap.Error(err))
-// 	}
-
-// 	newUser := &models.UserLogin{
-// 		Username: username,
-// 		Password: hash,
-// 	}
-
-// 	uid, err := u.uc.Create(ctx, newUser)
-// 	if err != nil {
-// 		logger.Log.Error("Error creating a new user", zap.Error(err))
-// 		return "", err
-// 	}
-// 	//TODO change "secretKey" => dynamic received value
-// 	return jwt.BuildToken(uid, "secretKey")
-// }

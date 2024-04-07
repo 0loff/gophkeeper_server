@@ -33,7 +33,6 @@ func Run() {
 
 	g, gCtx := errgroup.WithContext(mainCtx)
 	g.Go(func() error {
-		// if err := logger.Initialize(a.Cfg.LogLevel); err != nil {
 		if err := logger.Initialize("info"); err != nil {
 			log.Fatal(err)
 		}

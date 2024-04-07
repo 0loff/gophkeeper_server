@@ -14,10 +14,6 @@ message UserLoginRequest {
     string password = 2;
 }
 
-message UserdataGetResponse {
-    repeated TextdataEntry Data = 1;
-}
-
 message CallbackStatusResponse {
     string status = 1;
 }
@@ -119,8 +115,6 @@ service Gophkeeper {
     rpc UserAuth(UserAuthRequest) returns (google.protobuf.Empty) {};
     rpc UserLogin(UserLoginRequest) returns (google.protobuf.Empty) {};
 
-    rpc UserdataGet(google.protobuf.Empty) returns (UserdataGetResponse) {};
-    
     rpc TextdataCreate(TextDataStoreRequest) returns (CallbackStatusResponse) {};
     rpc TextdataUpdate(TextDataUpdateRequest) returns (CallbackStatusResponse) {};
     rpc TextdataGet(google.protobuf.Empty) returns (TextdataEntriesResponse) {};

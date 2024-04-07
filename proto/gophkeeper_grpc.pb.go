@@ -22,7 +22,6 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Gophkeeper_UserAuth_FullMethodName        = "/gophkeeper.Gophkeeper/UserAuth"
 	Gophkeeper_UserLogin_FullMethodName       = "/gophkeeper.Gophkeeper/UserLogin"
-	Gophkeeper_UserdataGet_FullMethodName     = "/gophkeeper.Gophkeeper/UserdataGet"
 	Gophkeeper_TextdataCreate_FullMethodName  = "/gophkeeper.Gophkeeper/TextdataCreate"
 	Gophkeeper_TextdataUpdate_FullMethodName  = "/gophkeeper.Gophkeeper/TextdataUpdate"
 	Gophkeeper_TextdataGet_FullMethodName     = "/gophkeeper.Gophkeeper/TextdataGet"
@@ -43,7 +42,6 @@ const (
 type GophkeeperClient interface {
 	UserAuth(ctx context.Context, in *UserAuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UserdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserdataGetResponse, error)
 	TextdataCreate(ctx context.Context, in *TextDataStoreRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 	TextdataUpdate(ctx context.Context, in *TextDataUpdateRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 	TextdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TextdataEntriesResponse, error)
@@ -78,15 +76,6 @@ func (c *gophkeeperClient) UserAuth(ctx context.Context, in *UserAuthRequest, op
 func (c *gophkeeperClient) UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Gophkeeper_UserLogin_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gophkeeperClient) UserdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserdataGetResponse, error) {
-	out := new(UserdataGetResponse)
-	err := c.cc.Invoke(ctx, Gophkeeper_UserdataGet_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -207,7 +196,6 @@ func (c *gophkeeperClient) BindataUpdate(ctx context.Context, in *BindataUpdateR
 type GophkeeperServer interface {
 	UserAuth(context.Context, *UserAuthRequest) (*emptypb.Empty, error)
 	UserLogin(context.Context, *UserLoginRequest) (*emptypb.Empty, error)
-	UserdataGet(context.Context, *emptypb.Empty) (*UserdataGetResponse, error)
 	TextdataCreate(context.Context, *TextDataStoreRequest) (*CallbackStatusResponse, error)
 	TextdataUpdate(context.Context, *TextDataUpdateRequest) (*CallbackStatusResponse, error)
 	TextdataGet(context.Context, *emptypb.Empty) (*TextdataEntriesResponse, error)
@@ -232,9 +220,6 @@ func (UnimplementedGophkeeperServer) UserAuth(context.Context, *UserAuthRequest)
 }
 func (UnimplementedGophkeeperServer) UserLogin(context.Context, *UserLoginRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserLogin not implemented")
-}
-func (UnimplementedGophkeeperServer) UserdataGet(context.Context, *emptypb.Empty) (*UserdataGetResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserdataGet not implemented")
 }
 func (UnimplementedGophkeeperServer) TextdataCreate(context.Context, *TextDataStoreRequest) (*CallbackStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TextdataCreate not implemented")
@@ -317,24 +302,6 @@ func _Gophkeeper_UserLogin_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GophkeeperServer).UserLogin(ctx, req.(*UserLoginRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Gophkeeper_UserdataGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GophkeeperServer).UserdataGet(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Gophkeeper_UserdataGet_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GophkeeperServer).UserdataGet(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -569,10 +536,6 @@ var Gophkeeper_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserLogin",
 			Handler:    _Gophkeeper_UserLogin_Handler,
-		},
-		{
-			MethodName: "UserdataGet",
-			Handler:    _Gophkeeper_UserdataGet_Handler,
 		},
 		{
 			MethodName: "TextdataCreate",
