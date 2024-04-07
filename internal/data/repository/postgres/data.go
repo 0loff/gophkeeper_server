@@ -166,6 +166,17 @@ func (r *DataRepository) UpdateTextdata(ctx context.Context, id int, text, metai
 	return nil
 }
 
+func (r *DataRepository) DeleteTextdata(ctx context.Context, id int) error {
+	_, err := r.dbpool.Exec(ctx, `DELETE FROM textdata WHERE id = $1`)
+	if err != nil {
+
+		logger.Log.Error("Failed to delete text data", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
 func (r *DataRepository) CreateCredsdata(ctx context.Context, user_id int, username, password, metainfo string) error {
 	now := time.Now()
 

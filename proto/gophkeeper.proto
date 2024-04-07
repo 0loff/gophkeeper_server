@@ -39,6 +39,10 @@ message TextDataUpdateRequest {
     string metainfo = 3;
 }
 
+message TextDataDeleteRequest {
+    int64 ID = 1;
+}
+
 message CredsdataEntry {
     int64 ID = 1;
     string username = 2;
@@ -118,6 +122,7 @@ service Gophkeeper {
     rpc TextdataCreate(TextDataStoreRequest) returns (CallbackStatusResponse) {};
     rpc TextdataUpdate(TextDataUpdateRequest) returns (CallbackStatusResponse) {};
     rpc TextdataGet(google.protobuf.Empty) returns (TextdataEntriesResponse) {};
+    rpc TextdataDelete(TextDataDeleteRequest) returns (CallbackStatusResponse) {};
 
     rpc CredsdataCreate(CredsdataStoreRequest) returns (CallbackStatusResponse) {};
     rpc CredsdataGet(google.protobuf.Empty) returns (CredsdataEntriesResponse) {};

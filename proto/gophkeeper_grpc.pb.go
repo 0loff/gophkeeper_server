@@ -25,6 +25,7 @@ const (
 	Gophkeeper_TextdataCreate_FullMethodName  = "/gophkeeper.Gophkeeper/TextdataCreate"
 	Gophkeeper_TextdataUpdate_FullMethodName  = "/gophkeeper.Gophkeeper/TextdataUpdate"
 	Gophkeeper_TextdataGet_FullMethodName     = "/gophkeeper.Gophkeeper/TextdataGet"
+	Gophkeeper_TextdataDelete_FullMethodName  = "/gophkeeper.Gophkeeper/TextdataDelete"
 	Gophkeeper_CredsdataCreate_FullMethodName = "/gophkeeper.Gophkeeper/CredsdataCreate"
 	Gophkeeper_CredsdataGet_FullMethodName    = "/gophkeeper.Gophkeeper/CredsdataGet"
 	Gophkeeper_CredsdataUpdate_FullMethodName = "/gophkeeper.Gophkeeper/CredsdataUpdate"
@@ -45,6 +46,7 @@ type GophkeeperClient interface {
 	TextdataCreate(ctx context.Context, in *TextDataStoreRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 	TextdataUpdate(ctx context.Context, in *TextDataUpdateRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 	TextdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TextdataEntriesResponse, error)
+	TextdataDelete(ctx context.Context, in *TextDataDeleteRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 	CredsdataCreate(ctx context.Context, in *CredsdataStoreRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
 	CredsdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CredsdataEntriesResponse, error)
 	CredsdataUpdate(ctx context.Context, in *CredsdataUpdateRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error)
@@ -103,6 +105,15 @@ func (c *gophkeeperClient) TextdataUpdate(ctx context.Context, in *TextDataUpdat
 func (c *gophkeeperClient) TextdataGet(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TextdataEntriesResponse, error) {
 	out := new(TextdataEntriesResponse)
 	err := c.cc.Invoke(ctx, Gophkeeper_TextdataGet_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gophkeeperClient) TextdataDelete(ctx context.Context, in *TextDataDeleteRequest, opts ...grpc.CallOption) (*CallbackStatusResponse, error) {
+	out := new(CallbackStatusResponse)
+	err := c.cc.Invoke(ctx, Gophkeeper_TextdataDelete_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -199,6 +210,7 @@ type GophkeeperServer interface {
 	TextdataCreate(context.Context, *TextDataStoreRequest) (*CallbackStatusResponse, error)
 	TextdataUpdate(context.Context, *TextDataUpdateRequest) (*CallbackStatusResponse, error)
 	TextdataGet(context.Context, *emptypb.Empty) (*TextdataEntriesResponse, error)
+	TextdataDelete(context.Context, *TextDataDeleteRequest) (*CallbackStatusResponse, error)
 	CredsdataCreate(context.Context, *CredsdataStoreRequest) (*CallbackStatusResponse, error)
 	CredsdataGet(context.Context, *emptypb.Empty) (*CredsdataEntriesResponse, error)
 	CredsdataUpdate(context.Context, *CredsdataUpdateRequest) (*CallbackStatusResponse, error)
@@ -229,6 +241,9 @@ func (UnimplementedGophkeeperServer) TextdataUpdate(context.Context, *TextDataUp
 }
 func (UnimplementedGophkeeperServer) TextdataGet(context.Context, *emptypb.Empty) (*TextdataEntriesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TextdataGet not implemented")
+}
+func (UnimplementedGophkeeperServer) TextdataDelete(context.Context, *TextDataDeleteRequest) (*CallbackStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TextdataDelete not implemented")
 }
 func (UnimplementedGophkeeperServer) CredsdataCreate(context.Context, *CredsdataStoreRequest) (*CallbackStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CredsdataCreate not implemented")
@@ -356,6 +371,24 @@ func _Gophkeeper_TextdataGet_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GophkeeperServer).TextdataGet(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gophkeeper_TextdataDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TextDataDeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GophkeeperServer).TextdataDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Gophkeeper_TextdataDelete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GophkeeperServer).TextdataDelete(ctx, req.(*TextDataDeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -548,6 +581,10 @@ var Gophkeeper_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TextdataGet",
 			Handler:    _Gophkeeper_TextdataGet_Handler,
+		},
+		{
+			MethodName: "TextdataDelete",
+			Handler:    _Gophkeeper_TextdataDelete_Handler,
 		},
 		{
 			MethodName: "CredsdataCreate",
