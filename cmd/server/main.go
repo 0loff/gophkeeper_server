@@ -42,7 +42,7 @@ func Run() {
 			log.Fatal(err)
 		}
 
-		logger.Sugar.Infoln("The Grpc server is running on port :3200")
+		logger.Sugar.Infoln("The Grpc server is running on port :3211")
 
 		return s.Srv.Serve(listen)
 	})

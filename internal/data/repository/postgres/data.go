@@ -167,9 +167,8 @@ func (r *DataRepository) UpdateTextdata(ctx context.Context, id int, text, metai
 }
 
 func (r *DataRepository) DeleteTextdata(ctx context.Context, id int) error {
-	_, err := r.dbpool.Exec(ctx, `DELETE FROM textdata WHERE id = $1`)
+	_, err := r.dbpool.Exec(ctx, `DELETE FROM textdata WHERE id = $1`, id)
 	if err != nil {
-
 		logger.Log.Error("Failed to delete text data", zap.Error(err))
 		return err
 	}
@@ -236,6 +235,16 @@ func (r *DataRepository) UpdateCredsdata(ctx context.Context, id int, username, 
 	return nil
 }
 
+func (r *DataRepository) DeleteCredsdata(ctx context.Context, id int) error {
+	_, err := r.dbpool.Exec(ctx, `DELETE FROM credsdata WHERE id = $1`, id)
+	if err != nil {
+		logger.Log.Error("Failed to delete credentials data", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
 func (r *DataRepository) CreateCardsdata(ctx context.Context, user_id int, pan, expiry, holder, metainfo string) error {
 	now := time.Now()
 
@@ -295,6 +304,16 @@ func (r *DataRepository) UpdateCardsdata(ctx context.Context, id int, pan, expir
 	return nil
 }
 
+func (r *DataRepository) DeleteCardsdata(ctx context.Context, id int) error {
+	_, err := r.dbpool.Exec(ctx, `DELETE FROM cardsdata WHERE id = $1`, id)
+	if err != nil {
+		logger.Log.Error("Failed to delete user card data", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
 func (r *DataRepository) CreateBindata(ctx context.Context, user_id int, binary []byte, metainfo string) error {
 	now := time.Now()
 
@@ -348,6 +367,16 @@ func (r *DataRepository) UpdateBindata(ctx context.Context, id int, binary []byt
 		binary, metainfo, now, id,
 	); err != nil {
 		logger.Log.Error("Failed to update bindata table entry", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (r *DataRepository) DeleteBindata(ctx context.Context, id int) error {
+	_, err := r.dbpool.Exec(ctx, `DELETE FROM bindata WHERE id = $1`, id)
+	if err != nil {
+		logger.Log.Error("Failed to delete user binary data", zap.Error(err))
 		return err
 	}
 

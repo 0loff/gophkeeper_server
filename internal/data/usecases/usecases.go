@@ -83,6 +83,15 @@ func (d *DataUseCases) UpdCredsdata(ctx context.Context, id int, username, passw
 	return nil
 }
 
+func (d *DataUseCases) DelCredsdata(ctx context.Context, id int) error {
+	if err := d.ac.DeleteCredsdata(ctx, id); err != nil {
+		logger.Log.Error("Cannot processed credentials data delete", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
 func (d *DataUseCases) StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error {
 	if err := d.ac.CreateCardsdata(ctx, uid, pan, expiry, holder, metainfo); err != nil {
 		logger.Log.Error("Cannot processed card data creation", zap.Error(err))
@@ -110,6 +119,15 @@ func (d *DataUseCases) UpdCardsdata(ctx context.Context, id int, pan, expiry, ho
 	return nil
 }
 
+func (d *DataUseCases) DelCardsdata(ctx context.Context, id int) error {
+	if err := d.ac.DeleteCardsdata(ctx, id); err != nil {
+		logger.Log.Error("Cannot processed cards data delete", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
 func (d *DataUseCases) StoreBindata(ctx context.Context, uid int, binary []byte, metainfo string) error {
 	if err := d.ac.CreateBindata(ctx, uid, binary, metainfo); err != nil {
 		logger.Log.Error("Cannot processed binary data creation", zap.Error(err))
@@ -131,6 +149,15 @@ func (d *DataUseCases) ReceiveBindata(ctx context.Context, uid int) []models.Bin
 func (d *DataUseCases) UpdBindata(ctx context.Context, id int, binary []byte, metainfo string) error {
 	if err := d.ac.UpdateBindata(ctx, id, binary, metainfo); err != nil {
 		logger.Log.Error("Cannot processed bindata updating", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) DelBindata(ctx context.Context, id int) error {
+	if err := d.ac.DeleteBindata(ctx, id); err != nil {
+		logger.Log.Error("Cannot processed binary data delete", zap.Error(err))
 		return err
 	}
 
