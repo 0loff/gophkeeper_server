@@ -46,7 +46,7 @@ message TextDataDeleteRequest {
 message CredsdataEntry {
     int64 ID = 1;
     string username = 2;
-    string password = 3;
+    bytes password = 3;
     string metainfo = 4;
 }
 
@@ -63,7 +63,7 @@ message CredsdataStoreRequest {
 message CredsdataUpdateRequest {
     int64 ID = 1;
     string username = 2;
-    string password = 3;
+    bytes password = 3;
     string metainfo = 4;
 }
 
