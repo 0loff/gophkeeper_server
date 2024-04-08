@@ -52,7 +52,7 @@ func (r *DataRepository) CreateCredsdataTable() {
 		id serial PRIMARY KEY,
 		user_id BIGINT NOT NULL,
 		username TEXT NOT NULL,
-		password TEXT NOT NULL,
+		password BYTEA NOT NULL,
 		metainfo TEXT NOT NULL,
 		created_at TIMESTAMP WITH TIME ZONE NOT NULL,
 		updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -176,7 +176,7 @@ func (r *DataRepository) DeleteTextdata(ctx context.Context, id int) error {
 	return nil
 }
 
-func (r *DataRepository) CreateCredsdata(ctx context.Context, user_id int, username, password, metainfo string) error {
+func (r *DataRepository) CreateCredsdata(ctx context.Context, user_id int, username string, password []byte, metainfo string) error {
 	now := time.Now()
 
 	_, err := r.dbpool.Exec(ctx, `INSERT INTO credsdata(user_id, username, password, metainfo, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`,

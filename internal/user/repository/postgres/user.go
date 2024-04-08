@@ -35,6 +35,7 @@ func (r *UserRepository) CreateTable() {
 		username TEXT NOT NULL,
 		hash TEXT NOT NULL,
 		email TEXT NOT NULL,
+		key BYTEA NOT NULL,
 		created_at TIMESTAMP WITH TIME ZONE NOT NULL,
 		updated_at TIMESTAMP WITH TIME ZONE NOT NULL
 		);`)
@@ -57,8 +58,8 @@ func (r *UserRepository) Create(ctx context.Context, user *models.UserAuth) (str
 	now := time.Now()
 	uid := uuid.New().String()
 
-	_, err := r.dbpool.Exec(ctx, `INSERT INTO users(uuid, username, hash, email, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`,
-		uid, user.Username, user.Password, user.Email, now.Format(time.RFC3339), now.Format(time.RFC3339))
+	_, err := r.dbpool.Exec(ctx, `INSERT INTO users(uuid, username, hash, email, key, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		uid, user.Username, user.Password, user.Email, user.Key, now.Format(time.RFC3339), now.Format(time.RFC3339))
 	if err != nil {
 		var pgErr *pgconn.PgError
 
@@ -76,8 +77,8 @@ func (r *UserRepository) Create(ctx context.Context, user *models.UserAuth) (str
 func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (*models.UserLogin, error) {
 	var User models.UserLogin
 
-	row := r.dbpool.QueryRow(ctx, `SELECT uuid, hash FROM users WHERE email = $1`, email)
-	if err := row.Scan(&User.UUID, &User.Password); err != nil {
+	row := r.dbpool.QueryRow(ctx, `SELECT uuid, hash, key FROM users WHERE email = $1`, email)
+	if err := row.Scan(&User.UUID, &User.Password, &User.Key); err != nil {
 		return nil, userpkg.ErrWrongCreds
 	}
 
