@@ -71,9 +71,9 @@ func (r *DataRepository) CreateCardsdataTable() {
 	_, err := r.dbpool.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS cardsdata (
 		id serial PRIMARY KEY,
 		user_id BIGINT NOT NULL,
-		pan TEXT NOT NULL,
-		expiry TEXT NOT NULL,
-		holder TEXT NOT NULL,
+		pan BYTEA NOT NULL,
+		expiry BYTEA NOT NULL,
+		holder BYTEA NOT NULL,
 		metainfo TEXT NOT NULL,
 		created_at TIMESTAMP WITH TIME ZONE NOT NULL,
 		updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -245,7 +245,7 @@ func (r *DataRepository) DeleteCredsdata(ctx context.Context, id int) error {
 	return nil
 }
 
-func (r *DataRepository) CreateCardsdata(ctx context.Context, user_id int, pan, expiry, holder, metainfo string) error {
+func (r *DataRepository) CreateCardsdata(ctx context.Context, user_id int, pan, expiry, holder []byte, metainfo string) error {
 	now := time.Now()
 
 	_, err := r.dbpool.Exec(ctx, `INSERT INTO cardsdata(user_id, pan, expiry, holder, metainfo, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
@@ -287,7 +287,7 @@ func (r *DataRepository) GetCardsdata(ctx context.Context, user_id int) ([]model
 	return CardsdataEntries, nil
 }
 
-func (r *DataRepository) UpdateCardsdata(ctx context.Context, id int, pan, expiry, holder, metainfo string) error {
+func (r *DataRepository) UpdateCardsdata(ctx context.Context, id int, pan, expiry, holder []byte, metainfo string) error {
 	now := time.Now()
 
 	if _, err := r.dbpool.Exec(

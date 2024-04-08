@@ -92,7 +92,7 @@ func (d *DataUseCases) DelCredsdata(ctx context.Context, id int) error {
 	return nil
 }
 
-func (d *DataUseCases) StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error {
+func (d *DataUseCases) StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder []byte, metainfo string) error {
 	if err := d.ac.CreateCardsdata(ctx, uid, pan, expiry, holder, metainfo); err != nil {
 		logger.Log.Error("Cannot processed card data creation", zap.Error(err))
 		return err
@@ -110,7 +110,7 @@ func (d *DataUseCases) ReceiveCardsdata(ctx context.Context, uid int) []models.C
 	return cardsData
 }
 
-func (d *DataUseCases) UpdCardsdata(ctx context.Context, id int, pan, expiry, holder, metainfo string) error {
+func (d *DataUseCases) UpdCardsdata(ctx context.Context, id int, pan, expiry, holder []byte, metainfo string) error {
 	if err := d.ac.UpdateCardsdata(ctx, id, pan, expiry, holder, metainfo); err != nil {
 		logger.Log.Error("Cannot processed cardsdata updating", zap.Error(err))
 		return err

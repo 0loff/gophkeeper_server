@@ -19,9 +19,9 @@ type CredsdataEntry struct {
 
 type CardsdataEntry struct {
 	ID       int
-	Pan      string
-	Expiry   string
-	Holder   string
+	Pan      []byte
+	Expiry   []byte
+	Holder   []byte
 	Metainfo string
 }
 

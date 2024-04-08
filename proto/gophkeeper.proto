@@ -73,9 +73,9 @@ message CredsdataDeleteRequest {
 
 message CardsdataEntry {
     int64 ID = 1;
-    string pan = 2;
-    string expiry = 3;
-    string holder = 4;
+    bytes pan = 2;
+    bytes expiry = 3;
+    bytes holder = 4;
     string metainfo = 5;
 }
 
@@ -84,17 +84,17 @@ message CardsdataEntriesResponse {
 }
 
 message CardsdataStoreRequest {
-    string pan = 1;
-    string expiry = 2;
-    string holder = 3;
+    bytes pan = 1;
+    bytes expiry = 2;
+    bytes holder = 3;
     string metainfo = 4;
 }
 
 message CardsdataUpdateRequest {
     int64 ID = 1;
-    string pan = 2;
-    string expiry = 3;
-    string holder = 4;
+    bytes pan = 2;
+    bytes expiry = 3;
+    bytes holder = 4;
     string metainfo = 5;
 }
 

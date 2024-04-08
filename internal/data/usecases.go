@@ -17,9 +17,9 @@ type DataProcessor interface {
 	UpdCredsdata(ctx context.Context, uid int, username, password []byte, metainfo string) error
 	DelCredsdata(ctx context.Context, id int) error
 
-	StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error
+	StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder []byte, metainfo string) error
 	ReceiveCardsdata(ctx context.Context, uid int) []models.CardsdataEntry
-	UpdCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error
+	UpdCardsdata(ctx context.Context, uid int, pan, expiry, holder []byte, metainfo string) error
 	DelCardsdata(ctx context.Context, id int) error
 
 	StoreBindata(ctx context.Context, uid int, binary []byte, metainfo string) error
