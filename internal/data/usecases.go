@@ -12,9 +12,9 @@ type DataProcessor interface {
 	UpdTextdata(ctx context.Context, id int, title, text string) error
 	DelTextdata(ctx context.Context, id int) error
 
-	StoreCredsdata(ctx context.Context, uid int, username string, password []byte, metainfo string) error
+	StoreCredsdata(ctx context.Context, uid int, username, password []byte, metainfo string) error
 	ReceiveCredsdata(ctx context.Context, uid int) []models.CredsdataEntry
-	UpdCredsdata(ctx context.Context, uid int, username, password, metainfo string) error
+	UpdCredsdata(ctx context.Context, uid int, username, password []byte, metainfo string) error
 	DelCredsdata(ctx context.Context, id int) error
 
 	StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder, metainfo string) error

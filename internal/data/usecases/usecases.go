@@ -56,7 +56,7 @@ func (d *DataUseCases) DelTextdata(ctx context.Context, id int) error {
 	return nil
 }
 
-func (d *DataUseCases) StoreCredsdata(ctx context.Context, uid int, username string, password []byte, metainfo string) error {
+func (d *DataUseCases) StoreCredsdata(ctx context.Context, uid int, username, password []byte, metainfo string) error {
 	if err := d.ac.CreateCredsdata(ctx, uid, username, password, metainfo); err != nil {
 		logger.Log.Error("Cannot processed credentials creation", zap.Error(err))
 		return err
@@ -74,7 +74,7 @@ func (d *DataUseCases) ReceiveCredsdata(ctx context.Context, uid int) []models.C
 	return credsData
 }
 
-func (d *DataUseCases) UpdCredsdata(ctx context.Context, id int, username, password, metainfo string) error {
+func (d *DataUseCases) UpdCredsdata(ctx context.Context, id int, username, password []byte, metainfo string) error {
 	if err := d.ac.UpdateCredsdata(ctx, id, username, password, metainfo); err != nil {
 		logger.Log.Error("Cannot processed credsdata updating", zap.Error(err))
 		return err

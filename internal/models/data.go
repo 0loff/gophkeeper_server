@@ -12,8 +12,8 @@ type TextdataEntry struct {
 
 type CredsdataEntry struct {
 	ID       int
-	Username string
-	Password string
+	Username []byte
+	Password []byte
 	Metainfo string
 }
 

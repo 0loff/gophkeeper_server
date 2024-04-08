@@ -12,9 +12,9 @@ type DataManager interface {
 	UpdateTextdata(ctx context.Context, id int, title, text string) error
 	DeleteTextdata(ctx context.Context, id int) error
 
-	CreateCredsdata(ctx context.Context, user_id int, username string, password []byte, metainfo string) error
+	CreateCredsdata(ctx context.Context, user_id int, username, password []byte, metainfo string) error
 	GetCredsdata(ctx context.Context, user_id int) ([]models.CredsdataEntry, error)
-	UpdateCredsdata(ctx context.Context, user_id int, username, password, metainfo string) error
+	UpdateCredsdata(ctx context.Context, user_id int, username, password []byte, metainfo string) error
 	DeleteCredsdata(ctx context.Context, id int) error
 
 	CreateCardsdata(ctx context.Context, user_id int, pan, expiry, holder, metainfo string) error
