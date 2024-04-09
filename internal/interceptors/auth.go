@@ -2,7 +2,6 @@ package interceptors
 
 import (
 	"context"
-	"fmt"
 
 	ch "github.com/0loff/gophkeeper_server/internal/context_helpers"
 	"github.com/0loff/gophkeeper_server/internal/logger"
@@ -28,8 +27,6 @@ func AuthInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServe
 	if !ok || len(md.Get("token")) == 0 {
 		return "", status.Errorf(codes.PermissionDenied, "Unrecognized user")
 	}
-
-	fmt.Print(md)
 
 	token := md.Get("token")[0]
 	userID, err := jwt.ParseToken(token)

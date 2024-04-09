@@ -17,13 +17,14 @@ var ErrInvalidAccessToken = errors.New("invalid access token")
 type Claims struct {
 	jwt.RegisteredClaims
 	UserID uuid.UUID
+	Key    []byte
 }
 
 const tokenExp = time.Hour * 3
 const secretKey = "secretkey"
 
 // Конструктор, создающий JWT token
-func BuildToken(uid string) (string, error) {
+func BuildToken(uid string, key []byte) (string, error) {
 	user_id, err := uuid.Parse(uid)
 	if err != nil {
 		logger.Log.Error("Cannot convert string to uuid value", zap.Error(err))
@@ -35,6 +36,7 @@ func BuildToken(uid string) (string, error) {
 				ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenExp)),
 			},
 			UserID: user_id,
+			Key:    key,
 		})
 
 	tokenString, err := token.SignedString([]byte(secretKey))

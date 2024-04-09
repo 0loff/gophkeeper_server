@@ -4,6 +4,7 @@ type UserLogin struct {
 	UUID     string
 	Email    string
 	Password string
+	Key      []byte
 }
 
 type UserAuth struct {
@@ -11,4 +12,5 @@ type UserAuth struct {
 	Username string
 	Password string
 	Email    string
+	Key      []byte
 }

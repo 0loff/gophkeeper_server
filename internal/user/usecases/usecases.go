@@ -2,6 +2,8 @@ package usecases
 
 import (
 	"context"
+	"crypto/aes"
+	"crypto/rand"
 
 	"github.com/0loff/gophkeeper_server/internal/logger"
 	"github.com/0loff/gophkeeper_server/internal/models"
@@ -29,10 +31,17 @@ func (u *UserUseCases) Auth(ctx context.Context, username, password, email strin
 		return "", err
 	}
 
+	key, err := generateRandom(2 * aes.BlockSize) // ключ шифрования
+	if err != nil {
+		logger.Log.Error("Failed to create uniq user key from password", zap.Error(err))
+		return "", err
+	}
+
 	newUser := models.UserAuth{
 		Username: username,
 		Password: hash,
 		Email:    email,
+		Key:      key,
 	}
 
 	uuid, err := u.um.Create(ctx, &newUser)
@@ -41,7 +50,7 @@ func (u *UserUseCases) Auth(ctx context.Context, username, password, email strin
 		return "", err
 	}
 
-	return jwt.BuildToken(uuid)
+	return jwt.BuildToken(uuid, newUser.Key)
 }
 
 func (u *UserUseCases) Login(ctx context.Context, email, password string) (string, error) {
@@ -57,7 +66,7 @@ func (u *UserUseCases) Login(ctx context.Context, email, password string) (strin
 		return "", user.ErrWrongCreds
 	}
 
-	return jwt.BuildToken(userEntry.UUID)
+	return jwt.BuildToken(userEntry.UUID, userEntry.Key)
 }
 
 func (u *UserUseCases) GetUserID(ctx context.Context, uuid string) (int, error) {
@@ -71,22 +80,12 @@ func (u *UserUseCases) GetUserID(ctx context.Context, uuid string) (int, error) 
 
 }
 
-// func (u *UserUseCases) Login(ctx context.Context, username, password string) (string, error) {
-// 	hash, err := encryptor.Encrypt(password)
-// 	if err != nil {
-// 		logger.Log.Error("Failed to create hash from password", zap.Error(err))
-// 	}
+func generateRandom(size int) ([]byte, error) {
+	b := make([]byte, size)
+	_, err := rand.Read(b)
+	if err != nil {
+		return nil, err
+	}
 
-// 	newUser := &models.UserLogin{
-// 		Username: username,
-// 		Password: hash,
-// 	}
-
-// 	uid, err := u.uc.Create(ctx, newUser)
-// 	if err != nil {
-// 		logger.Log.Error("Error creating a new user", zap.Error(err))
-// 		return "", err
-// 	}
-// 	//TODO change "secretKey" => dynamic received value
-// 	return jwt.BuildToken(uid, "secretKey")
-// }
+	return b, nil
+}

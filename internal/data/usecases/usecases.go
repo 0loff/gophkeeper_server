@@ -47,9 +47,117 @@ func (d *DataUseCases) UpdTextdata(ctx context.Context, id int, title, text stri
 	return nil
 }
 
-func (d *DataUseCases) StoreCredsdata(ctx context.Context, uid int, username, password, metainfo string) error {
+func (d *DataUseCases) DelTextdata(ctx context.Context, id int) error {
+	if err := d.ac.DeleteTextdata(ctx, id); err != nil {
+		logger.Log.Error("Cannot processed textdata delete", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) StoreCredsdata(ctx context.Context, uid int, username, password []byte, metainfo string) error {
 	if err := d.ac.CreateCredsdata(ctx, uid, username, password, metainfo); err != nil {
 		logger.Log.Error("Cannot processed credentials creation", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) ReceiveCredsdata(ctx context.Context, uid int) []models.CredsdataEntry {
+	credsData, err := d.ac.GetCredsdata(ctx, uid)
+	if err != nil {
+		logger.Log.Error("Cannot receive user credentials data", zap.Error(err))
+		return nil
+	}
+	return credsData
+}
+
+func (d *DataUseCases) UpdCredsdata(ctx context.Context, id int, username, password []byte, metainfo string) error {
+	if err := d.ac.UpdateCredsdata(ctx, id, username, password, metainfo); err != nil {
+		logger.Log.Error("Cannot processed credsdata updating", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) DelCredsdata(ctx context.Context, id int) error {
+	if err := d.ac.DeleteCredsdata(ctx, id); err != nil {
+		logger.Log.Error("Cannot processed credentials data delete", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) StoreCardsdata(ctx context.Context, uid int, pan, expiry, holder []byte, metainfo string) error {
+	if err := d.ac.CreateCardsdata(ctx, uid, pan, expiry, holder, metainfo); err != nil {
+		logger.Log.Error("Cannot processed card data creation", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) ReceiveCardsdata(ctx context.Context, uid int) []models.CardsdataEntry {
+	cardsData, err := d.ac.GetCardsdata(ctx, uid)
+	if err != nil {
+		logger.Log.Error("Cannot receive user cards data", zap.Error(err))
+		return nil
+	}
+	return cardsData
+}
+
+func (d *DataUseCases) UpdCardsdata(ctx context.Context, id int, pan, expiry, holder []byte, metainfo string) error {
+	if err := d.ac.UpdateCardsdata(ctx, id, pan, expiry, holder, metainfo); err != nil {
+		logger.Log.Error("Cannot processed cardsdata updating", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) DelCardsdata(ctx context.Context, id int) error {
+	if err := d.ac.DeleteCardsdata(ctx, id); err != nil {
+		logger.Log.Error("Cannot processed cards data delete", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) StoreBindata(ctx context.Context, uid int, binary []byte, metainfo string) error {
+	if err := d.ac.CreateBindata(ctx, uid, binary, metainfo); err != nil {
+		logger.Log.Error("Cannot processed binary data creation", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) ReceiveBindata(ctx context.Context, uid int) []models.BindataEntry {
+	binData, err := d.ac.GetBindata(ctx, uid)
+	if err != nil {
+		logger.Log.Error("Cannot receive user binary data", zap.Error(err))
+		return nil
+	}
+	return binData
+}
+
+func (d *DataUseCases) UpdBindata(ctx context.Context, id int, binary []byte, metainfo string) error {
+	if err := d.ac.UpdateBindata(ctx, id, binary, metainfo); err != nil {
+		logger.Log.Error("Cannot processed bindata updating", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (d *DataUseCases) DelBindata(ctx context.Context, id int) error {
+	if err := d.ac.DeleteBindata(ctx, id); err != nil {
+		logger.Log.Error("Cannot processed binary data delete", zap.Error(err))
 		return err
 	}
 

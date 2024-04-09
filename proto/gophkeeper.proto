@@ -14,10 +14,6 @@ message UserLoginRequest {
     string password = 2;
 }
 
-message UserdataGetResponse {
-    repeated TextdataEntry Data = 1;
-}
-
 message CallbackStatusResponse {
     string status = 1;
 }
@@ -43,10 +39,14 @@ message TextDataUpdateRequest {
     string metainfo = 3;
 }
 
+message TextDataDeleteRequest {
+    int64 ID = 1;
+}
+
 message CredsdataEntry {
     int64 ID = 1;
-    string username = 2;
-    string password = 3;
+    bytes username = 2;
+    bytes password = 3;
     string metainfo = 4;
 }
 
@@ -55,18 +55,99 @@ message CredsdataEntriesResponse {
 }
 
 message CredsdataStoreRequest {
-    string username = 1;
-    string password = 2;
+    bytes username = 1;
+    bytes password = 2;
     string metainfo = 3;
+}
+
+message CredsdataUpdateRequest {
+    int64 ID = 1;
+    bytes username = 2;
+    bytes password = 3;
+    string metainfo = 4;
+}
+
+message CredsdataDeleteRequest {
+    int64 ID = 1;
+}
+
+message CardsdataEntry {
+    int64 ID = 1;
+    bytes pan = 2;
+    bytes expiry = 3;
+    bytes holder = 4;
+    string metainfo = 5;
+}
+
+message CardsdataEntriesResponse {
+    repeated CardsdataEntry Data = 1;
+}
+
+message CardsdataStoreRequest {
+    bytes pan = 1;
+    bytes expiry = 2;
+    bytes holder = 3;
+    string metainfo = 4;
+}
+
+message CardsdataUpdateRequest {
+    int64 ID = 1;
+    bytes pan = 2;
+    bytes expiry = 3;
+    bytes holder = 4;
+    string metainfo = 5;
+}
+
+message CardsdataDeleteRequest {
+    int64 ID = 1;
+}
+
+message BindataEntry {
+    int64 ID = 1;
+    bytes binary = 2;
+    string metainfo = 3;
+}
+
+message BindataEntriesResponse {
+    repeated BindataEntry Data = 1;
+}
+
+message BindataStoreRequest {
+    bytes binary = 1;
+    string metainfo = 2;
+}
+
+message BindataUpdateRequest {
+    int64 ID = 1;
+    bytes binary = 2;
+    string metainfo = 3;
+}
+
+message BindataDeleteRequest {
+    int64 ID = 1;
 }
 
 service Gophkeeper {
     rpc UserAuth(UserAuthRequest) returns (google.protobuf.Empty) {};
     rpc UserLogin(UserLoginRequest) returns (google.protobuf.Empty) {};
-    rpc UserdataGet(google.protobuf.Empty) returns (UserdataGetResponse) {};
+
     rpc TextdataCreate(TextDataStoreRequest) returns (CallbackStatusResponse) {};
     rpc TextdataUpdate(TextDataUpdateRequest) returns (CallbackStatusResponse) {};
     rpc TextdataGet(google.protobuf.Empty) returns (TextdataEntriesResponse) {};
+    rpc TextdataDelete(TextDataDeleteRequest) returns (CallbackStatusResponse) {};
+
     rpc CredsdataCreate(CredsdataStoreRequest) returns (CallbackStatusResponse) {};
     rpc CredsdataGet(google.protobuf.Empty) returns (CredsdataEntriesResponse) {};
+    rpc CredsdataUpdate(CredsdataUpdateRequest) returns (CallbackStatusResponse) {};
+    rpc CredsdataDelete(CredsdataDeleteRequest) returns (CallbackStatusResponse) {};
+    
+    rpc CardsdataCreate(CardsdataStoreRequest) returns (CallbackStatusResponse) {};
+    rpc CardsdataGet(google.protobuf.Empty) returns (CardsdataEntriesResponse) {};
+    rpc CardsdataUpdate(CardsdataUpdateRequest) returns (CallbackStatusResponse) {};
+    rpc CardsdataDelete(CardsdataDeleteRequest) returns (CallbackStatusResponse) {};
+
+    rpc BindataCreate(BindataStoreRequest) returns (CallbackStatusResponse) {};
+    rpc BindataGet(google.protobuf.Empty) returns (BindataEntriesResponse) {};
+    rpc BindataUpdate(BindataUpdateRequest) returns (CallbackStatusResponse) {};
+    rpc BindataDelete(BindataDeleteRequest) returns (CallbackStatusResponse) {};
 }

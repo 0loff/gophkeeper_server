@@ -33,17 +33,16 @@ func Run() {
 
 	g, gCtx := errgroup.WithContext(mainCtx)
 	g.Go(func() error {
-		// if err := logger.Initialize(a.Cfg.LogLevel); err != nil {
 		if err := logger.Initialize("info"); err != nil {
 			log.Fatal(err)
 		}
 
-		listen, err := net.Listen("tcp", ":3200")
+		listen, err := net.Listen("tcp", ":3211")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		logger.Sugar.Infoln("The Grpc server is running on port :3200")
+		logger.Sugar.Infoln("The Grpc server is running on port :3211")
 
 		return s.Srv.Serve(listen)
 	})
