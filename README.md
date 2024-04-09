@@ -1,6 +1,9 @@
-# Gophkeeper
+# Gophkeeper server
 
 Выпускной дипломный проект Яндекс Практикум "Менеджер паролей GophKeeper"
+___
+## Client repository
+https://github.com/0loff/gophkeeper_client
 ___
 
 # Запуск демо
